@@ -6,4 +6,4 @@
 
 * 明/暗主题切换
 * 动态效果
-![演示](./images/演示.gif)
+![演示](https://github.com/Cheng-MaoMao/simple-clock/blob/main/images/demonstration.gif)
