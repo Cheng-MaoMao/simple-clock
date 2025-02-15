@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>智能主题时钟</title>
+    <style>
+        :root {
+            --primary-color: #333;
+            --bg-color: #ffffff;
+            --transition-speed: 0.3s;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            color: var(--primary-color);
+            transition: all var(--transition-speed) ease;
+            font-family: 'Arial', sans-serif;
+        }
+
+        body.dark-theme {
+            --primary-color: #fff;
+            --bg-color: #1a1a1a;
+        }
+
+        .clock-container {
+            text-align: center;
+            padding: 2rem;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        #time {
+            font-size: 5rem;
+            font-weight: 300;
+            letter-spacing: 3px;
+            margin: 1rem 0;
+        }
+
+        .date-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 2rem;
+            justify-content: center;
+            width: 100%;
+        }
+
+        #date {
+            font-size: 1.5rem;
+            opacity: 0.8;
+        }
+
+        .theme-icon {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: var(--primary-color);
+            padding: 4px;
+            font-size: 1rem;
+            line-height: 1;
+            transition: all 0.3s ease;
+            opacity: 0.8;
+            position: relative;
+            top: -1px;
+        }
+
+        .theme-icon:hover {
+            opacity: 1;
+            transform: rotate(180deg);
+        }
+
+        @media (max-width: 768px) {
+            #time {
+                font-size: 3rem;
+            }
+
+            #date {
+                font-size: 1rem;
+            }
+
+            .theme-icon {
+                font-size: 0.8rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="clock-container">
+        <div id="time">00:00:00</div>
+        <div class="date-container">
+            <div id="date">2024年1月1日 星期一</div>
+            <button class="theme-icon" onclick="toggleTheme()">◐</button>
+        </div>
+    </div>
+
+    <script>
+        const timeElement = document.getElementById('time');
+        const dateElement = document.getElementById('date');
+        const body = document.body;
+
+        // 主题切换功能
+        function toggleTheme() {
+            body.classList.toggle('dark-theme');
+            localStorage.setItem('theme', body.classList.contains('dark-theme') ? 'dark' : 'light');
+        }
+
+        // 初始化主题
+        function initTheme() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                body.classList.add('dark-theme');
+            }
+        }
+
+        // 时间格式化
+        function formatTime(number) {
+            return number < 10 ? '0' + number : number;
+        }
+
+        // 中文日期配置
+        const chineseWeekdays = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+        const chineseMonths = ['1月', '2月', '3月', '4月', '5月', '6月',
+            '7月', '8月', '9月', '10月', '11月', '12月'];
+
+        function updateDateTime() {
+            const now = new Date();
+
+            // 更新时间
+            const hours = formatTime(now.getHours());
+            const minutes = formatTime(now.getMinutes());
+            const seconds = formatTime(now.getSeconds());
+            timeElement.textContent = `${hours}:${minutes}:${seconds}`;
+
+            // 更新日期
+            const year = now.getFullYear();
+            const month = chineseMonths[now.getMonth()];
+            const day = now.getDate();
+            const weekday = chineseWeekdays[now.getDay()];
+            dateElement.textContent = `${year}年${month}${day}日 ${weekday}`;
+        }
+
+        // 初始化
+        function init() {
+            initTheme();
+            updateDateTime();
+            setInterval(updateDateTime, 1000);
+        }
+
+        init();
+    </script>
+</body>
+
+</html>
